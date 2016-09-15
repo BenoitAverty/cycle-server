@@ -2,7 +2,7 @@ import express from 'express';
 import winston from 'winston';
 
 // This would be a npm package
-import makeCycleMiddleWare from './cycle-server';
+import makeCycleMiddleware from './cycle-server';
 
 // This is the app.
 import cycleApp from './cycle-app';
@@ -14,7 +14,7 @@ const app = express();
 const otherDrivers = {
   // drivers (HTTP, mongo...)
 };
-const cycleMiddleWare = makeCycleMiddleWare(cycleApp, otherDrivers);
+const cycleMiddleWare = makeCycleMiddleware(cycleApp, otherDrivers);
 
 app.use('/api', cycleMiddleWare);
 
