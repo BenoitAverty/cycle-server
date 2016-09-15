@@ -6,6 +6,9 @@ export default function cycleApp(sources) {
   );
 
   return {
-    server: sources.server.map(req => `Hello, World! Request was a ${req.method}`),
+    server: sources.server.map(req => ({
+      req,
+      data: `Hello, World! Request was a ${req.method}`,
+    })),
   };
 }

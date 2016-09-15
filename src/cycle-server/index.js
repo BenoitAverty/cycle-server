@@ -3,12 +3,16 @@ import RxJSAdapter from '@cycle/rxjs-adapter';
 import Rx from 'rxjs';
 import winston from 'winston';
 
+const linkedResponseSymbol = Symbol('linked response');
+
 export default function makeCycleMiddleware(cycleApp, drivers) {
   const source = new Rx.Subject();
 
   drivers;
   function serverDriver(sink) {
-    sink.subscribe(res => winston.info(`Inside the driver : Received a response (${res})`));
+    sink.subscribe(({ req, data }) => {
+      req[linkedResponseSymbol].send(JSON.stringify(data));
+    });
 
     return source;
   }
@@ -21,8 +25,11 @@ export default function makeCycleMiddleware(cycleApp, drivers) {
   return function cycleMiddleware(req, res) {
     winston.info(`Inside the middleware: received request ${req}`);
 
-    source.next(req);
+    const reqCopy = {
+      ...req,
+      [linkedResponseSymbol]: res,
+    };
 
-    res.send('Hello, World!');
+    source.next(reqCopy);
   };
 }
