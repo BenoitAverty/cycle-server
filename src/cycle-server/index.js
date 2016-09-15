@@ -7,7 +7,9 @@ export default function makeCycleMiddleware(cycleApp, drivers) {
   const source = new Rx.Subject();
 
   drivers;
-  function serverDriver() {
+  function serverDriver(sink) {
+    sink.subscribe(res => winston.info(`Inside the driver : Received a response (${res})`));
+
     return source;
   }
   serverDriver.streamAdapter = RxJSAdapter;
